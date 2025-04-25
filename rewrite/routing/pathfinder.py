@@ -1,6 +1,6 @@
 import heapq
 
-def dijkstra(graph, start, end):
+def dijkstra(map, start, end):
     """
     Inputs:
         graph: a dictionary {node: {neighbor: weight, ...}, ...}
@@ -10,7 +10,7 @@ def dijkstra(graph, start, end):
     Output:
         A list of nodes representing the shortest path from start to end
     """
-
+    graph = map.graph
     distances = {vertex: float('inf') for vertex in graph}
     previous_vertices = {vertex: None for vertex in graph}
     distances[start] = 0
@@ -23,8 +23,8 @@ def dijkstra(graph, start, end):
         if current_distance > distances[current_vertex]:
             continue
 
-        for neighbor, weight in graph[current_vertex].items():
-            distance = current_distance + weight
+        for neighbor, road in graph[current_vertex].items():
+            distance = current_distance + road.length
             if distance < distances[neighbor]:
                 distances[neighbor] = distance
                 previous_vertices[neighbor] = current_vertex

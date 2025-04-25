@@ -9,4 +9,6 @@ class Intersection:
 
     def position(self):
         return (self.x, self.y)
+    
+    
         

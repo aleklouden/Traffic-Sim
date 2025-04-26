@@ -5,7 +5,10 @@ class Agent:
         self.agent_id = agent_id
 
         #move attributes
+
         self.route = dijkstra(graph, start_vertex, end_vertex) or []
+        self.route_index = 0
+
         self.speed = 0
         self.reaction_time = reaction_time
         self.look_ahead_distance = look_ahead_distance
@@ -20,20 +23,11 @@ class Agent:
         self.current_lane = None
         self.postion = 0 #distance on path
 
-    def move_agent(self):
+    def move_agent(self, dt = 1.0):
         pass
     
-    def change_lanes(self):
-         pass
+    
     def obstacle_info(self):
-            """
-            Inputs: vehicle/agent
-
-            Output: distance and speed of vehicle ahead
-
-            Description: find the closest vehicle/object to the vehicle you are looking at
-            """
-
             #checking closest agent/vehicle to the current/selected one
             for other_agent in sorted(self.curr_lane.agents, key = lambda v: v.position):
                 #see if another agent/vehicle is on this path infront of this vehicle(above since below is behind them)

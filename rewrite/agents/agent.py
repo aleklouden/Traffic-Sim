@@ -10,6 +10,8 @@ class Agent:
         self.route_index = 0
         self.route_index = 0
 
+        self.finished = False
+
         self.speed = 0
         self.reaction_time = reaction_time
         self.look_ahead_distance = look_ahead_distance
@@ -22,9 +24,12 @@ class Agent:
         
         self.current_road = self.route[0][0]
         self.current_lane = self.current_road.lanes[0]
+        self.current_lane.agents.append(self)
 
         self.position = 0  # Initial position on the road
     def move_agent(self, dt=1.0):
+        if self.finished:
+             return
         #get next turn
         if self.route_index + 1 < len(self.route):
                 turn = self.route[self.route_index + 1][1]
@@ -44,7 +49,7 @@ class Agent:
                     
                     if self.is_lane_change_safe(target_lane):
                           self.current_lane.agents.remove(self)
-                          target_lane.agents.apppend(self)
+                          target_lane.agents.append(self)
                           self.current_lane = target_lane
         
         # Get info about vehicle/agent ahead
@@ -65,8 +70,25 @@ class Agent:
         
         self.speed = max(0, min(self.speed, max_speed))
         self.position += self.speed * dt
+        if self.position >= self.current_lane.length:
+            overflow = self.position - self.current_lane.length
+            self.advance_to_next_road()
+            self.position += overflow  # carry over any extra distance
 
 
+    def advance_to_next_road(self):
+         if self.route_index + 1 < len(self.route):
+              
+              self.position = 0
+              self.route_index += 1
+              next_road = self.route[self.route_index][0]
+              self.current_road = next_road
+              self.current_lane = next_road.lanes[0]
+         else:
+              self.speed = 0
+              
+              self.finished = True
+              
     
     def desired_lane_index(self, turn_direction):
             #sees where the best lane if they are turning left or right

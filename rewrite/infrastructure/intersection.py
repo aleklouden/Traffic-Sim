@@ -17,13 +17,38 @@ class Intersection:
     def position(self):
         return (self.x, self.y)
 
-    def can_proceed(self, agent):
-        #is overidden by the other classes
-        pass
+    def should_yeild(self, from_road, to_road, turning_direction, agent):
+        return False
+    
+#supe
+class StopSignIntersection(Intersection):
+    def should_yield(self, from_road, to_road, turning_direction, agent):
+        # Yield if any other vehicle has priority (simple example)
+        for other_agent in self.get_agents_incoming():
+            if other_agent != agent and other_agent.arrival_time < agent.arrival_time:
+                return True
+        return False
+    
+class RoundaboutIntersection(Intersection):
+    def should_yield(self, from_road, to_road, turning_direction, agent):
+        # Yield to agents already in the roundabout
+        for other_agent in self.get_agents_in_roundabout():
+            if other_agent != agent:
+                return True
+        return False
 
-class TrafficLight(Intersection):
+class TrafficLightIntersection(Intersection):
     def __init__(self, vertex, type, x, y):
         super().__init__(vertex, type, x, y)
+        self.light_state = {}  # {road: 'green' | 'red' | 'yellow'}
 
+    def should_yield(self, from_road, to_road, turning_direction, agent):
+        state = self.light_state.get(from_road)
+        if state != 'green':
+            return True
+        if turning_direction == 'right':
+            # maybe allow right-on-red after stop
+            return False
+        return False
     
         

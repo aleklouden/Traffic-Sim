@@ -34,12 +34,12 @@ def main():
 
     # Create agents (vehicles) that will traverse the graph
     agent1 = Agent(1, graph,'A', 'D')  # Example: Agent starts at A and is headed to D
-    agent2 = Agent(2, graph,'B', 'C')  # Another agent starting at B and heading to C
+    #agent2 = Agent(2, graph,'B', 'C',.01,.01,.01,.01,.01)  # Another agent starting at B and heading to C
 
     print(agent1.current_road)
     # Add agents to the simulation
     simulation.add_agent(agent1)
-    #imulation.add_agent(agent2)
+    #simulation.add_agent(agent2)
 
     # Run the simulation
     simulation.run()
